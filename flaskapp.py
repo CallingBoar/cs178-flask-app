@@ -6,6 +6,7 @@ from flask import Flask
 from flask import render_template
 from flask import Flask, render_template, request, redirect, url_for, flash
 from dbCode import *
+import creds
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key' # this is an artifact for using flash displays; 
@@ -55,8 +56,14 @@ def delete_user():
 def display_users():
     # hard code a value to the users_list;
     # note that this could have been a result from an SQL query :) 
-    users_list = (('John','Doe','Comedy'),('Jane', 'Doe','Drama'))
-    return render_template('display_users.html', users = users_list)
+    rows = execute_query("""
+        SELECT *
+        FROM Track;
+    """)
+
+    # users_list = (('John','Doe','Comedy'),('Jane', 'Doe','Drama'))
+    # return render_template('display_users.html', users = users_list)
+    return display_html(rows)
 
 
 # these two lines of code should always be the last in the file
