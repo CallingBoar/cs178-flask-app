@@ -77,7 +77,6 @@ def display_users():
         SELECT *
         FROM country;
     """)
-    print(rows[1])
 
     # users_list = (('John','Doe','Comedy'),('Jane', 'Doe','Drama'))
     # return render_template('display_users.html', users = users_list)
