@@ -7,10 +7,27 @@ from flask import render_template
 from flask import Flask, render_template, request, redirect, url_for, flash
 from dbCode import *
 import creds
+# import cryptography
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key' # this is an artifact for using flash displays; 
                                    # it is required, but you can leave this alone
+
+def display_html(rows):
+    """
+    Converts query result rows into a simple HTML table string.
+    Flask routes can return this directly as a response.
+    """
+    html = "<table border='1'>" + "<tr>"
+    for colnames in rows[0]:
+        html += f"<td>{colnames}</td>"
+    for row in rows:
+        html += "<tr>"
+        for col in row:
+            html += f"<td>{row[col]}</td>"
+        html += "</tr>"
+    html += "</table>"
+    return html
 
 @app.route('/')
 def home():
@@ -58,8 +75,9 @@ def display_users():
     # note that this could have been a result from an SQL query :) 
     rows = execute_query("""
         SELECT *
-        FROM Track;
+        FROM country;
     """)
+    print(rows[1])
 
     # users_list = (('John','Doe','Comedy'),('Jane', 'Doe','Drama'))
     # return render_template('display_users.html', users = users_list)
