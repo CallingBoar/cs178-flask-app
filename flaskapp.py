@@ -83,8 +83,8 @@ def update_country():
     else:
         return render_template('update_country.html')
 
-@app.route('/display-users')
-def display_users():
+@app.route('/display-countries')
+def display_countries():
     # hard code a value to the users_list;
     # note that this could have been a result from an SQL query :) 
     rows = execute_query("""
@@ -96,6 +96,14 @@ def display_users():
     # return render_template('display_users.html', users = users_list)
     return display_html(rows)
 
+@app.route('/query-data', methods=['GET', 'POST'])
+def query_data():
+    if request.method == 'POST':
+        query = request.form['query']
+        rows = execute_query(query)
+        return display_html(rows)
+    else:
+        return render_template('query_data.html')
 
 # these two lines of code should always be the last in the file
 if __name__ == '__main__':
