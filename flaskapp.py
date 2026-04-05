@@ -33,26 +33,26 @@ def display_html(rows):
 def home():
     return render_template('home.html')
 
-@app.route('/add-user', methods=['GET', 'POST'])
-def add_user():
+@app.route('/add-country', methods=['GET', 'POST'])
+def add_country():
     if request.method == 'POST':
         # Extract form data
         name = request.form['name']
-        genre = request.form['genre']
+        continent = request.form['continent']
         
         # Process the data (e.g., add it to a database)
         # For now, let's just print it to the console
-        print("Name:", name, ":", "Favorite Genre:", genre)
+        print("Name:", name, ":", "Continent:", continent)
         
-        flash('User added successfully! Huzzah!', 'success')  # 'success' is a category; makes a green banner at the top
+        flash('Country added successfully! Huzzah!', 'success')  # 'success' is a category; makes a green banner at the top
         # Redirect to home page or another page upon successful submission
         return redirect(url_for('home'))
     else:
         # Render the form page if the request method is GET
-        return render_template('add_user.html')
+        return render_template('add_country.html')
 
-@app.route('/delete-user',methods=['GET', 'POST'])
-def delete_user():
+@app.route('/delete-country',methods=['GET', 'POST'])
+def delete_country():
     if request.method == 'POST':
         # Extract form data
         name = request.form['name']
@@ -61,13 +61,27 @@ def delete_user():
         # For now, let's just print it to the console
         print("Name to delete:", name)
         
-        flash('User deleted successfully! Hoorah!', 'warning') 
+        flash('Country deleted successfully! Hoorah!', 'warning')
         # Redirect to home page or another page upon successful submission
         return redirect(url_for('home'))
     else:
         # Render the form page if the request method is GET
-        return render_template('delete_user.html')
+        return render_template('delete_country.html')
 
+@app.route('/update-country', methods=['GET', 'POST'])
+def update_country():
+    if request.method == 'POST':
+        name = request.form['name']
+        continent = request.form['continent']
+
+
+        print("Country to update:", name, "Value to replace continent:", continent)
+
+
+        flash('Country deleted successfully! Hoorah!', 'warning')
+        return redirect(url_for('home'))
+    else:
+        return render_template('update_country.html')
 
 @app.route('/display-users')
 def display_users():
