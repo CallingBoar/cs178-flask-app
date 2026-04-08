@@ -7,6 +7,7 @@ from flask import render_template
 from flask import Flask, render_template, request, redirect, url_for, flash
 from dbCode import *
 import creds
+import read_countries
 # import cryptography
 
 app = Flask(__name__)
@@ -88,6 +89,11 @@ def update_country():
         return redirect(url_for('home'))
     else:
         return render_template('update_country.html')
+
+@app.route('/display-countries')
+def display_countries():
+
+    return read_countries.countries_html()
 
 @app.route('/display-movies')
 def display_movies():
