@@ -43,6 +43,12 @@ def add_country():
         # Process the data (e.g., add it to a database)
         # For now, let's just print it to the console
         print("Name:", name, ":", "Continent:", continent)
+
+        execute_query("""
+            INSERT INTO country (Name, Continent)
+            VALUES (%s, 'idk lol');
+        """,
+        (name,))
         
         flash('Country added successfully! Huzzah!', 'success')  # 'success' is a category; makes a green banner at the top
         # Redirect to home page or another page upon successful submission
@@ -83,27 +89,29 @@ def update_country():
     else:
         return render_template('update_country.html')
 
-@app.route('/display-countries')
-def display_countries():
+@app.route('/display-movies')
+def display_movies():
     # hard code a value to the users_list;
     # note that this could have been a result from an SQL query :) 
     rows = execute_query("""
-        SELECT *
-        FROM country;
+        SELECT movie.movie_id, movie.title, genre.genre_name
+        FROM movie JOIN movie_genres JOIN genre
+        WHERE movie.movie_id=movie_genres.movie_id AND movie_genres.genre_id=genre.genre_id
+        ORDER BY title;
     """)
 
     # users_list = (('John','Doe','Comedy'),('Jane', 'Doe','Drama'))
     # return render_template('display_users.html', users = users_list)
     return display_html(rows)
 
-@app.route('/query-data', methods=['GET', 'POST'])
-def query_data():
+@app.route('/query-movies', methods=['GET', 'POST'])
+def query_movies():
     if request.method == 'POST':
         query = request.form['query']
         rows = execute_query(query)
         return display_html(rows)
     else:
-        return render_template('query_data.html')
+        return render_template('query_movies.html')
 
 # these two lines of code should always be the last in the file
 if __name__ == '__main__':

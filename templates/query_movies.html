@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Query Data</title>
+    <title>Query Movies</title>
   </head>
   <body>
-    <h1>Query Data</h1>
-    <form action="{{ url_for('query_data') }}" method="post">
+    <h1>Query Moives</h1>
+    <form action="{{ url_for('query_movies') }}" method="post">
       <label for="query">SQL Query:</label><br />
       <input type="text" id="query" name="query" required /><br />
       <input type="submit" value="Submit" />
