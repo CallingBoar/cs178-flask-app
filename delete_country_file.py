@@ -16,9 +16,8 @@ def get_table():
     dynamodb = boto3.resource("dynamodb", region_name=REGION)
     return dynamodb.Table(TABLE_NAME)
 
-def countries_html():
-    """returns an html with the countries in the table"""
+def delete_country_from_dynamo(name):
+    """deletes the item with key name from the table. Nothing happens if does not exist"""
     table = get_table()
-    response = table.scan()
-    items = response.get("Items", [])
-    return render_template('display_countries.html', countries = items)
+    response = table.delete_item(Key = {"Name": name})
+    return response

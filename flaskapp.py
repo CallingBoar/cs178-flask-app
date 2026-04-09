@@ -7,8 +7,11 @@ from flask import render_template
 from flask import Flask, render_template, request, redirect, url_for, flash
 from dbCode import *
 import creds
+# import functions from other .py files
 import read_countries
-# import cryptography
+import add_country_file
+import delete_country_file
+import update_country_file
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key' # this is an artifact for using flash displays; 
@@ -39,17 +42,14 @@ def add_country():
     if request.method == 'POST':
         # Extract form data
         name = request.form['name']
-        continent = request.form['continent']
+        popeulation_density = request.form['popeulation_density']
         
         # Process the data (e.g., add it to a database)
-        # For now, let's just print it to the console
-        print("Name:", name, ":", "Continent:", continent)
-
-        execute_query("""
-            INSERT INTO country (Name, Continent)
-            VALUES (%s, 'idk lol');
-        """,
-        (name,))
+        # use add country file to add add item
+        add_country_file.add_country_to_dynamo({
+            "Name": name,
+            "Popeulation Density": popeulation_density
+            })
         
         flash('Country added successfully! Huzzah!', 'success')  # 'success' is a category; makes a green banner at the top
         # Redirect to home page or another page upon successful submission
@@ -63,10 +63,9 @@ def delete_country():
     if request.method == 'POST':
         # Extract form data
         name = request.form['name']
-        
-        # Process the data (e.g., add it to a database)
-        # For now, let's just print it to the console
-        print("Name to delete:", name)
+
+        # use delete country file to delete item
+        delete_country_file.delete_country_from_dynamo(name)
         
         flash('Country deleted successfully! Hoorah!', 'warning')
         # Redirect to home page or another page upon successful submission
@@ -79,13 +78,12 @@ def delete_country():
 def update_country():
     if request.method == 'POST':
         name = request.form['name']
-        continent = request.form['continent']
+        popeulation_density = request.form['popeulation_density']
+
+        update_country_file.update_country_in_dynamo(name,popeulation_density)
 
 
-        print("Country to update:", name, "Value to replace continent:", continent)
-
-
-        flash('Country deleted successfully! Hoorah!', 'warning')
+        flash('Country updated successfully! Hoorah!', 'warning')
         return redirect(url_for('home'))
     else:
         return render_template('update_country.html')
@@ -97,8 +95,7 @@ def display_countries():
 
 @app.route('/display-movies')
 def display_movies():
-    # hard code a value to the users_list;
-    # note that this could have been a result from an SQL query :) 
+    # execute a query to get info for rows
     rows = execute_query("""
         SELECT movie.movie_id, movie.title, genre.genre_name
         FROM movie JOIN movie_genres JOIN genre
@@ -112,6 +109,7 @@ def display_movies():
 
 @app.route('/query-movies', methods=['GET', 'POST'])
 def query_movies():
+    # allows users to submit their own queries
     if request.method == 'POST':
         query = request.form['query']
         rows = execute_query(query)

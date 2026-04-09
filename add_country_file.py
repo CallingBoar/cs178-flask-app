@@ -1,4 +1,4 @@
-# Bernardo Martinez
+#Bernardo Martinez
 
 import boto3
 from boto3.dynamodb.conditions import Key
@@ -16,9 +16,8 @@ def get_table():
     dynamodb = boto3.resource("dynamodb", region_name=REGION)
     return dynamodb.Table(TABLE_NAME)
 
-def countries_html():
-    """returns an html with the countries in the table"""
+def add_country_to_dynamo(item):
+    """adds an item to the dynamo table"""
     table = get_table()
-    response = table.scan()
-    items = response.get("Items", [])
-    return render_template('display_countries.html', countries = items)
+    response = table.put_item(Item = item)
+    return response
