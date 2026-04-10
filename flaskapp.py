@@ -111,9 +111,12 @@ def display_movies():
 def query_movies():
     # allows users to submit their own queries
     if request.method == 'POST':
-        query = request.form['query']
-        rows = execute_query(query)
-        return display_html(rows)
+        try:
+            query = request.form['query']
+            rows = execute_query(query)
+            return display_html(rows)
+        except:
+            return render_template('query_movies_exception.html')
     else:
         return render_template('query_movies.html')
 
